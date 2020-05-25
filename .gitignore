@@ -7,6 +7,7 @@ __pycache__/
 *.py~
 *.py#
 *.ini~
+*.sh~
 
 # C extensions
 *.so
@@ -110,3 +111,6 @@ venv.bak/
 
 # Python Kernprof profiling
 .lprof
+
+# config file
+.ini

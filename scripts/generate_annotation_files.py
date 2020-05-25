@@ -4,10 +4,9 @@ import glob
 import json
 import numpy as np
 
-from radar_utils.configurable import Configurable
-from radar_utils.canada.transform_annotation import TransformAnnotation
-from radar_utils.canada.generate_annotations import AnnotationGenerator
-from radar_utils import RADAR_HOME, download
+from utils.configurable import Configurable
+from utils.transform_annotation import TransformAnnotation
+from utils.generate_annotations import AnnotationGenerator
 
 RA_SHAPE = (256, 256)
 RD_SHAPE = (256, 64)
@@ -170,17 +169,19 @@ def get_frame_oriented(sequences, instance_exceptions, carrada_path, write_resul
             json.dump(annotations, fp)
     return annotations
 
-if __name__ == '__main__':
-    temp_home = os.environ['TEMPHOME']
-    config_path = os.path.join(RADAR_HOME, 'config.ini')
+def main():
+    print('Step 4/4: Generate Annotation Files')
+    config_path = '../config.ini'
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
-    carrada_path = download('Carrada', os.path.join(warehouse, 'Carrada'))
-    with open(os.path.join(carrada_path, 'validated_seqs.txt')) as fp:
+    carrada = os.path.join(warehouse, 'Carrada'))
+    with open(os.path.join(carrada, 'validated_seqs.txt')) as fp:
         sequences = fp.readlines()
-    with open(os.path.join(carrada_path, 'instance_exceptions.json'), 'r') as fp:
+    with open(os.path.join(carrada, 'instance_exceptions.json'), 'r') as fp:
         instance_exceptions = json.load(fp)
     sequences = [seq.replace('\n', '') for seq in sequences]
-    annotations_io = get_instance_oriented(sequences, instance_exceptions, carrada_path)
+    # annotations_io = get_instance_oriented(sequences, instance_exceptions, carrada_path)
     annotations_fo = get_frame_oriented(sequences, instance_exceptions, carrada_path)
-    import ipdb; ipdb.set_trace()
+
+if __name__ == '__main__':
+    main()

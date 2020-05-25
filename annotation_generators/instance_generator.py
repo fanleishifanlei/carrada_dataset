@@ -49,15 +49,15 @@ class InstanceGenerator(Configurable):
         masks[seq_name] = dict()
         labels[seq_name] = dict()
         img_paths = sorted(glob.glob(os.path.join(sequence_path, 'camera_images', '*.jpg')))
-        print('Processing %s' % seq_name)
+        print('*** Processing Sequence:  %s ***' % seq_name)
         for img_path in img_paths:
-            print('Process image: {}'.format(img_path))
+            # print('Process image: {}'.format(img_path))
             image = ImageInstances(img_path, self.model, self.paths,
                                    seq_mot_tracker, n_random_points,
                                    save_instances_masks)
             image.update_instances()
             if isinstance(n_random_points, int):
-                print(image.get_points())
+                # print(image.get_points())
                 points[seq_name].update(image.get_points())
             if save_boxes:
                 boxes[seq_name].update(image.get_boxes())
