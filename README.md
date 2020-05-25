@@ -1,6 +1,6 @@
 # CARRADA Dataset: Camera and Automotive Radarwith Range-Angle-Doppler Annotations
 
-Code and dataset will be available soon.
+This repository is under construction. Code and dataset will be available soon.
 
 Dataset:
  - synchronized camera and radar recordings with angle-range and Doppler-range annotations
