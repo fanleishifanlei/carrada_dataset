@@ -1,7 +1,8 @@
 """Class to transform annotations depending on data"""
 import numpy as np
 
-class TransformAnnotation:
+
+class AnnotationTransformer:
 
     """
     Class to transform annotations in radar representation coordinates
