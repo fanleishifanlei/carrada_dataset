@@ -72,7 +72,7 @@ class SignalVisualizer():
         self.masks.append(mask)
 
     def save_scale(self, path, signal_type='range_doppler', color_scale=None,
-                   rotation=False):
+                   rotation=False, save_img=True, plot_img=False):
         """
         Method to create and save a visulisation
 
@@ -87,9 +87,87 @@ class SignalVisualizer():
             Display the color scale
         rotation: boolean
             Rotate the matrix for visualization purpose
+        save_img: boolean
+            Save the image (at the given path)
+        plot_img: boolean
+            Plot the image
         """
-        x_shape, y_shape = self.matrix.shape
-        image_size = self.image.shape
+        img = self._format_img(self.image, signal_type, color_scale, rotation)
+        if save_img:
+            plt.savefig(path)
+        if plot_img:
+            plt.show(img)
+        plt.close()
+
+    def save_annotation(self, index, path, signal_type='range_doppler', color_scale=None,
+                        localize=False, rotation=False, save_img=True, plot_img=False):
+        """
+        Method to save the image with annotation
+
+        PARAMETERS
+        ----------
+        index: int
+            Index of the annotation to visualize, i.e. position in the list
+        path: str
+            Path to save the image
+        signal_type: str
+            Supported: 'range_doppler', 'range_angle'.
+        color_scale: boolean
+            Display the color scale
+        localize: bool
+            Crop the image around the annotation
+        rotation: bool
+            Rotate the image for visualization purpose (180 degrees)
+        save_img: boolean
+            Save the image (at the given path)
+        plot_img: boolean
+            Plot the image
+        """
+        transformed_image = self._get_annotated_image(index, localize)
+        if localize:
+            fig, ax = plt.subplots(figsize=(7, 12))
+            if rotation:
+                img = ax.imshow(np.rot90(transformed_image, 2), cmap=self.color_scale_params[0])
+            else:
+                img = ax.imshow(transformed_image, cmap=self.color_scale_params[0])
+        else:
+            img = self._format_img(transformed_image, signal_type, color_scale, rotation)
+        if save_img:
+            plt.imsave(path, img)
+        if plot_img:
+            plt.show(img)
+        plt.close()
+
+    def save_multiple_annotations(self, path, signal_type='range_doppler', color_scale=None,
+                                  rotation=False, save_img=True, plot_img=False):
+        """
+        Method to save the image with all the added annotations
+
+        PARAMETERS
+        ----------
+        path: str
+            Path to save the image
+        signal_type: str
+            Supported: 'range_doppler', 'range_angle'.
+        color_scale: boolean
+            Display the color scale
+        rotation: bool
+            Rotate the image for visualization purpose (180 degrees)
+        save_img: boolean
+            Save the image (at the given path)
+        plot_img: boolean
+            Plot the image
+        """
+        transformed_image = self._get_multiple_annotated_image()
+        img = self._format_img(transformed_image, signal_type, color_scale, rotation)
+        if save_img:
+            plt.imsave(path, img)
+        if plot_img:
+            plt.show(img)
+        plt.close()
+
+    def _format_img(self, img, signal_type, color_scale, rotation):
+        image_size = img.shape
         if signal_type == 'range_doppler':
             fig, ax = plt.subplots(figsize=(7, 12))
             ax.set_xticks([0, int(image_size[1]/2)-1, image_size[1]-1])
@@ -120,45 +198,21 @@ class SignalVisualizer():
             ax.set_ylabel('Distance (m)')
             ax.set_xlabel('Angle (Degree)')
         if rotation:
-            im = ax.imshow(np.rot90(self.image, 2), cmap=self.color_scale_params[0])
+            im = ax.imshow(np.rot90(img, 2), cmap=self.color_scale_params[0])
         else:
-            im = ax.imshow(self.image, cmap=self.color_scale_params[0])
+            im = ax.imshow(img, cmap=self.color_scale_params[0])
         if color_scale:
             cbar = fig.colorbar(im, ax=ax)
             cbar.ax.set_ylabel('Normalised Intensity')
             cbar.ax.set_yticks([0, 1024*1/4, 1024*2/4,
                                 1024*3/4, 1024])
             cbar.ax.set_yticklabels([0., 0.2, 0.4, 0.6, 0.8, 1.])
-        plt.savefig(path)
-        plt.close()
+        return im
 
-    def save_annotation(self, index, path, annotation_type='sparse', localize=False,
-                        rotation=False):
-        """
-        Method to save the image with annotation
-
-        PARAMETERS
-        ----------
-        index: int
-            Index of the annotation to visualize, i.e. position in the list
-        path: str
-            Path to save the image
-        annotation_type: str
-            Supported: 'sparse', 'box', 'dense', 'box_mask'
-        localize: bool
-            Crop the image around the annotation
-        rotation: bool
-            Rotate the image (180 degrees)
-        """
-        transformed_image = self._get_annotated_image(index, localize, rotation)
-        plt.imsave(path, transformed_image)
-        plt.close()
-
-    def save_multiple_annotation(self, path, rotation=False):
-        """Method to save the image with all the added annotations"""
-        transformed_image = self._get_multiple_annotated_image(rotation)
-        plt.imsave(path, transformed_image)
-        plt.close()
+    def reset_annotation(self):
+        """Reset the annotation list"""
+        self.annotations = list()
+        self.masks = list()
 
     def _get_mask(self, index, annotation_type):
         if annotation_type == 'sparse':
@@ -171,7 +225,7 @@ class SignalVisualizer():
             raise ValueError('Annotation type {} is not supported.'.format(annotation_type))
         return mask
 
-    def _get_annotated_image(self, index, localize, rotation):
+    def _get_annotated_image(self, index, localize):
         transformed_image = self.image.copy()
         try:
             mask = (self.masks[index] * 255).astype(np.uint8)
@@ -192,11 +246,9 @@ class SignalVisualizer():
                                                   max(centroid[1]-80, 0):
                                                   min(centroid[1]+80,
                                                       transformed_image.shape[1])]
-        if rotation:
-            transformed_image = np.rot90(transformed_image, 2)
         return transformed_image
 
-    def _get_multiple_annotated_image(self, rotation):
+    def _get_multiple_annotated_image(self):
         mask = np.zeros((self.x_shape*self.scaling_factor, self.y_shape*self.scaling_factor))
         zeros = np.zeros(mask.shape).astype(np.uint8)
         if len(self.masks) == 0:
@@ -210,8 +262,6 @@ class SignalVisualizer():
                 instance_mask = np.dstack([zeros, self.masks[i], self.masks[i]])
             instance_mask = (instance_mask * 255).astype(np.uint8)
             transformed_image = cv2.addWeighted(transformed_image, 1., instance_mask, 0.5, 0)
-        if rotation:
-            transformed_image = np.rot90(transformed_image, 2)
         return transformed_image
 
     def _get_centroid(self, mask):
