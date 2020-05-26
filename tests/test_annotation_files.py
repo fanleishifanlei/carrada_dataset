@@ -1,15 +1,15 @@
 """Test function to format data """
 import os
-import pytest
 import json
+import pytest
+
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
+from scripts.generate_annotation_files import get_instance_oriented, get_frame_oriented
 
-from annotation_generators.annotation_files import get_instance_oriented, get_frame_oriented
-
-CONFIG_PATH = '../config.ini'
+CONFIG_PATH = os.path.join(CARRADA_HOME, 'config.ini')
 CONFIG = Configurable(CONFIG_PATH).config
 WAREHOUSE = CONFIG['data']['warehouse']
-# CARRADA = download('Carrada', os.path.join(WAREHOUSE, 'Carrada'))
 CARRADA = os.path.join(WAREHOUSE, 'Carrada')
 SEQ_NAMES = [['2020-02-28-13-14-35'], ['2020-02-28-13-08-51'], ['2019-09-16-13-20-20']]
 

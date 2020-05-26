@@ -7,6 +7,7 @@ import PIL
 from scipy import ndimage
 import torchvision
 
+from utils import CARRADA_HOME
 from utils.sort import Sort
 from utils.configurable import Configurable
 from .utils import get_random_rgb, threshold_mask
@@ -19,8 +20,7 @@ class InstanceGenerator(Configurable):
     """
 
     def __init__(self):
-        # self.config_path = os.path.join(RADAR_HOME, 'config.ini')
-        self.config_path = '../config.ini'
+        self.config_path = os.path.join(CARRADA_HOME, 'config.ini')
         super().__init__(self.config_path)
         self.paths = self._get_paths()
         self.model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)

@@ -1,13 +1,15 @@
 """Script to generate RD points """
 import os
 import json
+
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
 from annotation_generators.rd_points_generator import RDPointsGenerator
 
 
 def main():
     print('***** Step 2/4: Generate Range-Doppler points *****')
-    config_path = '../config.ini'
+    config_path = os.path.join(CARRADA_HOME, 'config.ini')
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
     carrada = os.path.join(warehouse, 'Carrada')

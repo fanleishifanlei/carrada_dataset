@@ -1,13 +1,15 @@
 """Script to generate centroid for all sequences"""
 import os
 import json
+
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
 from annotation_generators.centroid_tracking import CentroidTracking
 
 
 def main():
     print('***** Step 3/4: Generate Centroids *****')
-    config_path = '../config.ini'
+    config_path = os.path.join(CARRADA_HOME, 'config.ini')
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
     carrada = os.path.join(warehouse, 'Carrada')

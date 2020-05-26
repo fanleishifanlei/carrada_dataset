@@ -1,12 +1,14 @@
 """Script to generate instances for all sequences"""
 import os
+
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
 from annotation_generators.instance_generator import InstanceGenerator
 
 
 def main():
     print('***** Step 1/4: Generate instances *****')
-    config_path = '../config.ini'
+    config_path = os.path.join(CARRADA_HOME, 'config.ini')
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
     carrada = os.path.join(warehouse, 'Carrada')

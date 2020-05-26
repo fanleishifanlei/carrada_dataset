@@ -2,11 +2,12 @@
 import os
 import pytest
 import numpy as np
+
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
 from utils.transform_data import DataTransformer
-from utils.visualize_signal import SignalVisualizer
 
-CONFIG_PATH = '../config.ini'
+CONFIG_PATH = os.path.join(CARRADA_HOME, 'config.ini')
 CONFIG = Configurable(CONFIG_PATH).config
 # CARRADA = download('Carrada', os.path.join(CONFIG['data']['warehouse'], 'Carrada'))
 CARRADA = os.path.join(CONFIG['data']['warehouse'], 'Carrada')

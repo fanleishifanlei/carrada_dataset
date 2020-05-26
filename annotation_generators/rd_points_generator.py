@@ -5,6 +5,7 @@ import glob
 import numpy as np
 import pandas as pd
 
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
 from utils.visualize_signal import SignalVisualizer
 from utils.camera import Camera
@@ -32,7 +33,7 @@ class RDPointsGenerator(Configurable):
     RANGE_RES = 0.1953125
 
     def __init__(self, seq_name, n_points, instances, time_window=10):
-        self.config_path = '../config.ini'
+        self.config_path = os.path.join(CARRADA_HOME, 'config.ini')
         super().__init__(self.config_path)
         self.cls = self.__class__
         self.seq_name = seq_name

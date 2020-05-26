@@ -4,8 +4,9 @@ import glob
 import json
 import numpy as np
 
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
-from utils.transform_annotation import TransformAnnotation
+from utils.transform_annotations import AnnotationTransformer
 from utils.generate_annotations import AnnotationGenerator
 
 RA_SHAPE = (256, 256)
@@ -65,10 +66,10 @@ def get_instance_oriented(sequences, instance_exceptions, carrada_path, write_re
                 for signal_type in ['range_doppler', 'range_angle']:
                     annotations[sequence][clean_instance][frame][signal_type] = dict()
                     if signal_type == 'range_doppler':
-                        annots = TransformAnnotation(raw_points, RD_SHAPE)
+                        annots = AnnotationTransformer(raw_points, RD_SHAPE)
                         annot_generator = AnnotationGenerator(RD_SHAPE, annots.to_rd())
                     elif signal_type == 'range_angle':
-                        annots = TransformAnnotation(raw_points, RA_SHAPE)
+                        annots = AnnotationTransformer(raw_points, RA_SHAPE)
                         annot_generator = AnnotationGenerator(RA_SHAPE, annots.to_ra())
                     else:
                         raise TypeError('Signal type {} not supported'.format(signal_type))
@@ -147,10 +148,10 @@ def get_frame_oriented(sequences, instance_exceptions, carrada_path, write_resul
                     for signal_type in ['range_doppler', 'range_angle']:
                         annotations[sequence][frame][clean_instance][signal_type] = dict()
                         if signal_type == 'range_doppler':
-                            annots = TransformAnnotation(raw_points, RD_SHAPE)
+                            annots = AnnotationTransformer(raw_points, RD_SHAPE)
                             annot_generator = AnnotationGenerator(RD_SHAPE, annots.to_rd())
                         elif signal_type == 'range_angle':
-                            annots = TransformAnnotation(raw_points, RA_SHAPE)
+                            annots = AnnotationTransformer(raw_points, RA_SHAPE)
                             annot_generator = AnnotationGenerator(RA_SHAPE, annots.to_ra())
                         else:
                             raise TypeError('Signal type {} not supported'.format(signal_type))
@@ -169,9 +170,10 @@ def get_frame_oriented(sequences, instance_exceptions, carrada_path, write_resul
             json.dump(annotations, fp)
     return annotations
 
+
 def main():
     print('Step 4/4: Generate Annotation Files')
-    config_path = '../config.ini'
+    config_path = os.path.join(CARRADA_HOME, 'config.ini')
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
     carrada = os.path.join(warehouse, 'Carrada'))

@@ -2,13 +2,14 @@
 import os
 import json
 import pytest
+
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
 from annotation_generators.centroid_tracking import CentroidTracking
 
-CONFIG_PATH = '../config.ini'
+CONFIG_PATH = os.path.join(CARRADA_HOME, 'config.ini')
 CONFIG = Configurable(CONFIG_PATH).config
 WAREHOUSE = CONFIG['data']['warehouse']
-# CARRADA = download('Carrada', os.path.join(WAREHOUSE, 'Carrada'))
 CARRADA = os.path.join(WAREHOUSE, 'Carrada')
 SEQUENCE = '2020-02-28-13-09-58'
 

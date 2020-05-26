@@ -5,9 +5,8 @@ import glob
 import numpy as np
 import pandas as pd
 from sklearn.cluster import MeanShift
-from scipy.stats import multivariate_normal
-from scipy.spatial.distance import jensenshannon
 
+from utils import CARRADA_HOME
 from utils.configurable import Configurable
 from .utils import compute_kl, convert_to_rd_points, visualise_doa, visualise_points_on_rd
 
@@ -192,8 +191,7 @@ class CentroidTracking(Configurable):
 
     def __init__(self, seq_name, instances, ref_ids, labels,
                  min_frame_boundaries, max_frame_boundaries):
-        # self.config_path = os.path.join(RADAR_HOME, 'config.ini')
-        self.config_path = '../config.ini'
+        self.config_path = os.path.join(CARRADA_HOME, 'config.ini')
         super().__init__(self.config_path)
         self.cls = __class__
         if isinstance(instances, list):
