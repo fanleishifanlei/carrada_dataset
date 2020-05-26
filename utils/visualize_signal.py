@@ -133,7 +133,7 @@ class SignalVisualizer():
         else:
             img = self._format_img(transformed_image, signal_type, color_scale, rotation)
         if save_img:
-            plt.imsave(path, img)
+            plt.savefig(path)
         if plot_img:
             plt.show(img)
         plt.close()
@@ -161,7 +161,7 @@ class SignalVisualizer():
         transformed_image = self._get_multiple_annotated_image()
         img = self._format_img(transformed_image, signal_type, color_scale, rotation)
         if save_img:
-            plt.imsave(path, img)
+            plt.savefig(path)
         if plot_img:
             plt.show(img)
         plt.close()
@@ -207,7 +207,7 @@ class SignalVisualizer():
             cbar.ax.set_yticks([0, 1024*1/4, 1024*2/4,
                                 1024*3/4, 1024])
             cbar.ax.set_yticklabels([0., 0.2, 0.4, 0.6, 0.8, 1.])
-        return im
+        return fig
 
     def reset_annotation(self):
         """Reset the annotation list"""
@@ -281,12 +281,16 @@ class SignalVisualizer():
     def _annotate_with_box(self, annotation):
         mask = np.zeros((self.x_shape*self.scaling_factor, self.y_shape*self.scaling_factor))
         mask[annotation[0][0]*self.scaling_factor:annotation[1][0]*self.scaling_factor,
-             annotation[0][1]*self.scaling_factor] = 1.
+             annotation[0][1]*self.scaling_factor:annotation[0][1]*self.scaling_factor +
+             self.scaling_factor] = 1.
         mask[annotation[0][0]*self.scaling_factor:annotation[1][0]*self.scaling_factor,
-             annotation[1][1]*self.scaling_factor] = 1.
-        mask[annotation[0][0]*self.scaling_factor,
+             annotation[1][1]*self.scaling_factor:annotation[1][1]*self.scaling_factor +
+             self.scaling_factor] = 1.
+        mask[annotation[0][0]*self.scaling_factor:annotation[0][0]*self.scaling_factor +
+             self.scaling_factor,
              annotation[0][1]*self.scaling_factor:annotation[1][1]*self.scaling_factor] = 1.
-        mask[annotation[1][0]*self.scaling_factor,
+        mask[annotation[1][0]*self.scaling_factor:annotation[1][0]*self.scaling_factor +
+             self.scaling_factor,
              annotation[0][1]*self.scaling_factor:annotation[1][1]*self.scaling_factor] = 1.
         return mask
 
