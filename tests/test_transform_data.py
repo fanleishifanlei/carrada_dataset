@@ -22,7 +22,8 @@ def get_true_ra(request):
 
 @pytest.fixture
 def get_true_rd(request):
-    rd_matrix_path = os.path.join(CARRADA, request.param, 'unlagged_doppler_range_numpy', FRAME_NAME)
+    rd_matrix_path = os.path.join(CARRADA, request.param, 'unlagged_doppler_range_numpy',
+                                  FRAME_NAME)
     rd_matrix = np.load(rd_matrix_path)
     return rd_matrix
 
