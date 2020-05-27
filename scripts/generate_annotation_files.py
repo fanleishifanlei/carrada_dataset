@@ -176,14 +176,14 @@ def main():
     config_path = os.path.join(CARRADA_HOME, 'config.ini')
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
-    carrada = os.path.join(warehouse, 'Carrada'))
+    carrada = os.path.join(warehouse, 'Carrada')
     with open(os.path.join(carrada, 'validated_seqs.txt')) as fp:
         sequences = fp.readlines()
     with open(os.path.join(carrada, 'instance_exceptions.json'), 'r') as fp:
         instance_exceptions = json.load(fp)
     sequences = [seq.replace('\n', '') for seq in sequences]
-    # annotations_io = get_instance_oriented(sequences, instance_exceptions, carrada_path)
-    annotations_fo = get_frame_oriented(sequences, instance_exceptions, carrada_path)
+    annotations_io = get_instance_oriented(sequences, instance_exceptions, carrada)
+    annotations_fo = get_frame_oriented(sequences, instance_exceptions, carrada)
 
 if __name__ == '__main__':
     main()

@@ -64,8 +64,8 @@ class AnnotationTransformer:
         """
         transformed_annotations = list()
         for point in self.points:
-            range_value = np.sqrt((point[0] - self.cls.WORLD_CAMERA[0])**2 +\
-                                  (point[1] - self.cls.WORLD_CAMERA[1])**2)
+            range_value = np.sqrt((point[0] - self.cls.WORLD_RADAR[0])**2 +\
+                                  (point[1] - self.cls.WORLD_RADAR[1])**2)
             range_coordinate = int(range_value / self.cls.RANGE_RES)
             doppler_value = point[2]
             doppler_coordinate = int(doppler_value / self.cls.DOPPLER_RES)
