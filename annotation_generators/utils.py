@@ -20,7 +20,7 @@ def compute_determinant(matrix):
         det = np.abs(det)
     return det
 
-def compute_kl(mu1, mu2, sigma1, sigma2, stop=False):
+def compute_kl(mu1, mu2, sigma1, sigma2):
     """Method to compute the Kullback-Leibler Divergence between two Gaussians
 
     PARAMETERS

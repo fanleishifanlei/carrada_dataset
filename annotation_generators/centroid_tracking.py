@@ -32,10 +32,10 @@ class CentroidMatching:
         self.label = label
         self._create_clusters(self.doa_points, self.init_points)
 
-    def _create_clusters(self, x_train, x_test, stop=False):
+    def _create_clusters(self, x_train, x_test):
         """Train an optimal Mean Shift and select the closest cluster"""
         bandwidth = self._select_bandwidth()
-        mean_shift = self._get_mean_shift(bandwidth, x_train, x_test, stop)
+        mean_shift = self._get_mean_shift(bandwidth, x_train, x_test)
         self.doa_labels = mean_shift.labels_
         cluster_centers = mean_shift.cluster_centers_
         labels_pred = mean_shift.predict(x_test)
@@ -44,7 +44,7 @@ class CentroidMatching:
         self.cluster_size = np.sum(cluster_indexes)
         self.cluster = self.doa_points[cluster_indexes]
 
-    def _get_mean_shift(self, bandwidths, x_train, x_test=None, stop=False):
+    def _get_mean_shift(self, bandwidths, x_train, x_test=None):
         """
         Compute the Mean Shift algorithm with an optimized bandwidth selection
         using the Jensen Shannon divergence.
@@ -57,8 +57,6 @@ class CentroidMatching:
             DoA points to cluster
         x_test: numpy array
             Centroid to track. Default: None.
-        stop: boolean
-            If you want a break point. Default: False
 
         RETURNS
         -------
@@ -98,10 +96,10 @@ class CentroidMatching:
                 inter_cov_1 = (covs[i-1] + covs[i])/4.
                 inter_mean_2 = (means[i] + means[i+1])/2.
                 inter_cov_2 = (covs[i] + covs[i+1])/4.
-                js_1 = (compute_kl(means[i-1], inter_mean_1, covs[i-1], inter_cov_1, stop) +\
-                        compute_kl(means[i], inter_mean_1, covs[i], inter_cov_1, stop))/2.
-                js_2 = (compute_kl(means[i], inter_mean_2, covs[i], inter_cov_2, stop) +\
-                        compute_kl(means[i+1], inter_mean_2, covs[i+1], inter_cov_2, stop))/2.
+                js_1 = (compute_kl(means[i-1], inter_mean_1, covs[i-1], inter_cov_1) +\
+                        compute_kl(means[i], inter_mean_1, covs[i], inter_cov_1))/2.
+                js_2 = (compute_kl(means[i], inter_mean_2, covs[i], inter_cov_2) +\
+                        compute_kl(means[i+1], inter_mean_2, covs[i+1], inter_cov_2))/2.
                 metric = js_1 + js_2
                 triple_js.append(metric)
 
@@ -113,9 +111,6 @@ class CentroidMatching:
             best_bw = bandwidths[0]
         mean_shift = MeanShift(bandwidth=best_bw, n_jobs=15)
         mean_shift.fit(x_train)
-        if stop:
-            # Break point
-            import ipdb; ipdb.set_trace()
         return mean_shift
 
     def _select_bandwidth(self):
@@ -148,7 +143,7 @@ class CentroidMatching:
         """Method to get the points in the tracked cluster"""
         return self.cluster
 
-    def update(self, new_doa_points, stop=False):
+    def update(self, new_doa_points):
         """
         Method to update the status of tracked cluster
 
@@ -158,10 +153,7 @@ class CentroidMatching:
             New DOA point cloud  to find the tracked cluster
         """
         self.doa_points = new_doa_points
-        if stop:
-            self._create_clusters(self.doa_points, self.centroids, stop=True)
-        else:
-            self._create_clusters(self.doa_points, self.centroids)
+        self._create_clusters(self.doa_points, self.centroids)
 
 
 class CentroidTracking(Configurable):
@@ -294,7 +286,6 @@ class CentroidTracking(Configurable):
     def _track(self, instance_id, ref_id, label, frame_boundary, ref_id_point,
                ids, rd_paths, save_vis_rd, save_vis_doa, data_type):
         """Tracking of an instance in a sequence of radar signals"""
-        stop = False
         annotations = dict()
         ref_doa_points = self._select_doa_points(ref_id)
         centroid_matching = CentroidMatching(ref_doa_points, ref_id_point, label)
@@ -302,12 +293,6 @@ class CentroidTracking(Configurable):
         os.makedirs(path_vis, exist_ok=True)
         rd_matrix = np.load(rd_paths[ids[0]])
         for i in range(0, len(ids)):
-            """
-            if ids[i] in (10, 23):
-                stop = True
-            else:
-                stop = False
-            """
             current_id = rd_paths[ids[i]].split('/')[-1].split('.')[0]
             try:
                 rd_matrix = np.load(rd_paths[ids[i]])
@@ -319,7 +304,7 @@ class CentroidTracking(Configurable):
             # Stop criteria: there are not enough points in DoA
             if doa_points.shape[0] > 0:
                 if i > 0:
-                    centroid_matching.update(doa_points, stop)
+                    centroid_matching.update(doa_points)
             else:
                 # Initialise the delta values for next step
                 print('Stop criteria reached: not enough points in DoA')
