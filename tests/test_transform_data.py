@@ -16,20 +16,20 @@ FRAME_NAME = '000100.npy'
 
 @pytest.fixture
 def get_true_ra(request):
-    ra_matrix_path = os.path.join(CARRADA, request.param, 'unlagged_angle_range_numpy', FRAME_NAME)
+    ra_matrix_path = os.path.join(CARRADA, request.param, 'range_angle_numpy', FRAME_NAME)
     ra_matrix = np.load(ra_matrix_path)
     return ra_matrix
 
 @pytest.fixture
 def get_true_rd(request):
-    rd_matrix_path = os.path.join(CARRADA, request.param, 'unlagged_doppler_range_numpy',
+    rd_matrix_path = os.path.join(CARRADA, request.param, 'range_doppler_numpy',
                                   FRAME_NAME)
     rd_matrix = np.load(rd_matrix_path)
     return rd_matrix
 
 @pytest.mark.parametrize('get_true_ra', SEQ_NAMES[0], indirect=True)
 def test_data_transfomer_ra0(get_true_ra):
-    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[0][0], 'unlagged_RAD_numpy', FRAME_NAME)
+    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[0][0], 'RAD_numpy', FRAME_NAME)
     rad_matrix = np.load(rad_matrix_path)
     transformer = DataTransformer(rad_matrix)
     pred_ra = transformer.to_ra()
@@ -37,7 +37,7 @@ def test_data_transfomer_ra0(get_true_ra):
 
 @pytest.mark.parametrize('get_true_rd', SEQ_NAMES[0], indirect=True)
 def test_data_transfomer_rd0(get_true_rd):
-    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[0][0], 'unlagged_RAD_numpy', FRAME_NAME)
+    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[0][0], 'RAD_numpy', FRAME_NAME)
     rad_matrix = np.load(rad_matrix_path)
     transformer = DataTransformer(rad_matrix)
     pred_rd = transformer.to_rd()
@@ -45,7 +45,7 @@ def test_data_transfomer_rd0(get_true_rd):
 
 @pytest.mark.parametrize('get_true_ra', SEQ_NAMES[1], indirect=True)
 def test_data_transfomer_ra1(get_true_ra):
-    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[1][0], 'unlagged_RAD_numpy', FRAME_NAME)
+    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[1][0], 'RAD_numpy', FRAME_NAME)
     rad_matrix = np.load(rad_matrix_path)
     transformer = DataTransformer(rad_matrix)
     pred_ra = transformer.to_ra()
@@ -53,7 +53,7 @@ def test_data_transfomer_ra1(get_true_ra):
 
 @pytest.mark.parametrize('get_true_rd', SEQ_NAMES[1], indirect=True)
 def test_data_transfomer_rd1(get_true_rd):
-    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[1][0], 'unlagged_RAD_numpy', FRAME_NAME)
+    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[1][0], 'RAD_numpy', FRAME_NAME)
     rad_matrix = np.load(rad_matrix_path)
     transformer = DataTransformer(rad_matrix)
     pred_rd = transformer.to_rd()
@@ -61,7 +61,7 @@ def test_data_transfomer_rd1(get_true_rd):
 
 @pytest.mark.parametrize('get_true_ra', SEQ_NAMES[2], indirect=True)
 def test_data_transfomer_ra2(get_true_ra):
-    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[2][0], 'unlagged_RAD_numpy', FRAME_NAME)
+    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[2][0], 'RAD_numpy', FRAME_NAME)
     rad_matrix = np.load(rad_matrix_path)
     transformer = DataTransformer(rad_matrix)
     pred_ra = transformer.to_ra()
@@ -69,7 +69,7 @@ def test_data_transfomer_ra2(get_true_ra):
 
 @pytest.mark.parametrize('get_true_rd', SEQ_NAMES[2], indirect=True)
 def test_data_transfomer_rd2(get_true_rd):
-    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[2][0], 'unlagged_RAD_numpy', FRAME_NAME)
+    rad_matrix_path = os.path.join(CARRADA, SEQ_NAMES[2][0], 'RAD_numpy', FRAME_NAME)
     rad_matrix = np.load(rad_matrix_path)
     transformer = DataTransformer(rad_matrix)
     pred_rd = transformer.to_rd()

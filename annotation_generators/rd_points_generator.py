@@ -7,6 +7,7 @@ import pandas as pd
 
 from utils import CARRADA_HOME
 from utils.configurable import Configurable
+from utils.transform_data import DataTransformer
 from utils.visualize_signal import SignalVisualizer
 from utils.camera import Camera
 from .utils import compute_line_coefs, compute_orthogonal_proj
@@ -54,7 +55,6 @@ class RDPointsGenerator(Configurable):
         year = self.seq_name.split('-')[0]
         paths = dict()
         paths['warehouse'] = self.config['data']['warehouse']
-        # paths['carrada'] = download('Carrada', os.path.join(paths['warehouse'], 'Carrada'))
         paths['carrada'] = os.path.join(paths['warehouse'], 'Carrada')
         paths['cam_params'] = os.path.join(paths['carrada'], 'cam_params')
         paths['intrinsics'] = os.path.join(paths['cam_params'], 'intrinsics.xml')
@@ -62,7 +62,7 @@ class RDPointsGenerator(Configurable):
         paths['seq_data'] = os.path.join(paths['carrada'], self.seq_name)
         paths['points'] = os.path.join(paths['seq_data'], 'points.json')
         paths['rds'] = glob.glob(os.path.join(paths['seq_data'],
-                                              'unlagged_doppler_range_numpy', '*.npy'))
+                                              'range_doppler_numpy', '*.npy'))
         paths['rds'].sort()
         paths['timestamps'] = os.path.join(paths['seq_data'], 'adc_ts_' + self.seq_name + '.txt')
         os.makedirs(paths['seq_data'], exist_ok=True)

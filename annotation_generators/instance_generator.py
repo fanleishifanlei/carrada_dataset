@@ -31,7 +31,6 @@ class InstanceGenerator(Configurable):
         """Collect usefull paths"""
         paths = dict()
         warehouse = self.config['data']['warehouse']
-        # paths['carrada'] = download('Carrada', fallback=os.path.join(warehouse, 'Carrada'))
         paths['carrada'] = os.path.join(warehouse, 'Carrada')
         return paths
 
@@ -51,13 +50,11 @@ class InstanceGenerator(Configurable):
         img_paths = sorted(glob.glob(os.path.join(sequence_path, 'camera_images', '*.jpg')))
         print('*** Processing Sequence:  %s ***' % seq_name)
         for img_path in img_paths:
-            # print('Process image: {}'.format(img_path))
             image = ImageInstances(img_path, self.model, self.paths,
                                    seq_mot_tracker, n_random_points,
                                    save_instances_masks)
             image.update_instances()
             if isinstance(n_random_points, int):
-                # print(image.get_points())
                 points[seq_name].update(image.get_points())
             if save_boxes:
                 boxes[seq_name].update(image.get_boxes())

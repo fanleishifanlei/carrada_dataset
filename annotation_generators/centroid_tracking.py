@@ -230,11 +230,10 @@ class CentroidTracking(Configurable):
         """Define paths"""
         paths = dict()
         paths['warehouse'] = self.config['data']['warehouse']
-        # paths['carrada'] = download('Carrada', fallback=os.path.join(paths['warehouse'], 'Carrada'))
         paths['carrada'] = os.path.join(paths['warehouse'], 'Carrada')
         paths['seq'] = os.path.join(paths['carrada'], self.seq_name)
         paths['rd_numpy'] = os.path.join(paths['seq'],
-                                         'unlagged_doppler_range_numpy')
+                                         'range_doppler_numpy')
         paths['visualisation'] = os.path.join(paths['seq'],
                                               'centroid_tracking_jensen_shannon')
         paths['doa_points'] = os.path.join(paths['seq'], 'DOAPoints.csv')

@@ -12,7 +12,6 @@ from annotation_generators.instance_generator import InstanceGenerator, ImageIns
 SEQ_NAME = '2020-02-28-13-09-58'
 CONFIG_PATH = os.path.join(CARRADA_HOME, 'config.ini')
 CONFIG = Configurable(CONFIG_PATH).config
-# CARRADA = download('Carrada', os.path.join(CONFIG['data']['warehouse'], 'Carrada'))
 CARRADA = os.path.join(CONFIG['data']['warehouse'], 'Carrada')
 
 def get_img_points():
