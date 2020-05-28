@@ -1,6 +1,7 @@
 """Script to generate centroid for all sequences"""
 import os
 import json
+import time
 
 from utils import CARRADA_HOME
 from utils.configurable import Configurable
@@ -9,6 +10,7 @@ from annotation_generators.centroid_tracking import CentroidTracking
 
 def main():
     print('***** Step 3/4: Generate Centroids *****')
+    time1 = time.time()
     config_path = os.path.join(CARRADA_HOME, 'config.ini')
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
@@ -33,6 +35,9 @@ def main():
                                                                       save_vis_rd=False,
                                                                       save_vis_doa=False,
                                                                       data_type=data_type)
+    print('***** Execution Time for Step 3/4:'
+          ' {} secs. *****'.format(round(time.time() - time1, 2)))
+
 
 if __name__ == '__main__':
     main()

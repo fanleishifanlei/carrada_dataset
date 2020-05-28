@@ -2,6 +2,7 @@
 import os
 import glob
 import json
+import time
 import numpy as np
 
 from utils import CARRADA_HOME
@@ -172,7 +173,8 @@ def get_frame_oriented(sequences, instance_exceptions, carrada_path, write_resul
 
 
 def main():
-    print('Step 4/4: Generate Annotation Files')
+    print('***** Step 4/4: Generate Annotation Files *****')
+    time1 = time.time()
     config_path = os.path.join(CARRADA_HOME, 'config.ini')
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
@@ -184,6 +186,9 @@ def main():
     sequences = [seq.replace('\n', '') for seq in sequences]
     annotations_io = get_instance_oriented(sequences, instance_exceptions, carrada)
     annotations_fo = get_frame_oriented(sequences, instance_exceptions, carrada)
+    print('***** Execution Time for Step 4/4:'
+          ' {} secs. *****'.format(round(time.time() - time1, 2)))
+
 
 if __name__ == '__main__':
     main()

@@ -1,6 +1,7 @@
 """Script to generate RD points """
 import os
 import json
+import time
 
 from utils import CARRADA_HOME
 from utils.configurable import Configurable
@@ -9,6 +10,7 @@ from annotation_generators.rd_points_generator import RDPointsGenerator
 
 def main():
     print('***** Step 2/4: Generate Range-Doppler points *****')
+    time1 = time.time()
     config_path = os.path.join(CARRADA_HOME, 'config.ini')
     config = Configurable(config_path).config
     warehouse = config['data']['warehouse']
@@ -28,6 +30,9 @@ def main():
                                        save_points=True,
                                        save_points_coordinates=False,
                                        save_world_points=True)
+    print('***** Execution Time for Step 2/4:'
+          ' {} secs. *****'.format(round(time.time() - time1, 2)))
+
 
 if __name__ == '__main__':
     main()
